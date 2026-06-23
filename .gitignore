@@ -3,6 +3,7 @@
 lib/
 libfpvm/
 bin/
+man/
 src/LINUX*/
 pvmgs/LINUX*/
 *.o
