@@ -1,0 +1,10 @@
+
+# ignore build output
+lib/
+libfpvm/
+bin/
+src/LINUX*/
+pvmgs/LINUX*/
+*.o
+pvmd3
+pvm
