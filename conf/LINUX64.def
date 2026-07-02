@@ -43,3 +43,4 @@ HASRANLIB	=	t
 AR			=	ar
 PVM_ARCH	=	LINUX64
 MAKE		=	make
+RSHCOMMAND  = /usr/bin/ssh
