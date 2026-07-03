@@ -29,18 +29,21 @@
 #	and then do a "make clean ; make shared" in $PVM_ROOT.
 #
 # SHAREDCFLAGS = -fpic
-SHAREDCFLAGS =
+SHAREDCFLAGS = 
 SHAREDLDFLAGS = -shared
 #
 ARCHCFLAGS	=	-DSYSVSIGNAL -DNOWAIT3 -DRSHCOMMAND=\"/usr/bin/rsh\" \
 				-DNEEDENDIAN -DFDSETNOTSTRUCT -DHASERRORVARS \
 				-DHASSTDLIB -DCTIMEISTIMET -DSYSERRISCONST -DNOTMPNAM \
-				-DSYSVSTR -DUSESTRERROR $(SHAREDCFLAGS)
-ARCHDLIB	=
+				-DSYSVSTR -DUSESTRERROR $(SHAREDCFLAGS) -I/usr/include/tirpc
+ARCHDLIB	= -ldl -lm -ltirpc
 ARCHDOBJ	=
-ARCHLIB		=
+ARCHLIB		=	-ldl -lm -ltirpc
 HASRANLIB	=	t
 AR			=	ar
 PVM_ARCH	=	LINUX64
 MAKE		=	make
-RSHCOMMAND  = /usr/bin/ssh
+CC		=	gcc
+C_OPT		= -O2
+CFLAGS      = -O -I/usr/include/tirpc
+
