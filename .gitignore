@@ -9,3 +9,21 @@ pvmgs/LINUX*/
 *.o
 pvmd3
 pvm
+
+# Build artifacts
+*.o
+*.a
+core
+core.*
+*/LINUX64/
+*/LINUXARM/
+*/LINUXARM64/
+bin/
+lib/*/*.a
+lib/*/pvmd
+
+# Editor/backup files
+*~
+.project
+.cproject
+.settings/
