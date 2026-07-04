@@ -1,25 +1,21 @@
-# Compiler
-CC := gcc
+PVM_ROOT ?= /home/smarconcini/linux/pvm_study/pvm3
+PVM_ARCH ?= $(shell $(PVM_ROOT)/lib/pvmgetarch)
 
-# Paths (must have PVM_ROOT set in environment)
-INCLUDES := -I$(PVM_ROOT)/include
-LDFLAGS  := -L$(PVM_ROOT)/lib/LINUX64
-LIBS     := -lpvm3 -ltirpc -ldl -lm
+CC ?= gcc
 
-# Target and source
-TARGET := $(PVM_ROOT)/mytests/selfhello
-SRC    := $(PVM_ROOT)/mytests/selfhello.c
+CFLAGS += -I$(PVM_ROOT)/include
+LDFLAGS += -L$(PVM_ROOT)/lib/$(PVM_ARCH)
+LDLIBS += -lpvm3 -ltirpc -ldl -lm
 
-# Default target
+TARGET = selfhello
+SRC = selfhello.c
+
 all: $(TARGET)
 
-# Build rule
 $(TARGET): $(SRC)
-	$(CC) $(INCLUDES) -o $@ $< $(LDFLAGS) $(LIBS)
-	cp $(TARGET) ../bin/LINUX64
+	$(CC) $(CFLAGS) -o $(TARGET) $(SRC) $(LDFLAGS) $(LDLIBS)
+	mkdir -p $(PVM_ROOT)/bin/$(PVM_ARCH)
+	cp $(TARGET) $(PVM_ROOT)/bin/$(PVM_ARCH)/$(TARGET)
 
-# Clean target
 clean:
-	rm -f $(TARGET)
-
-.PHONY: all clean
+	rm -f $(TARGET) *.o

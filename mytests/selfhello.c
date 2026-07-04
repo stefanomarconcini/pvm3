@@ -29,7 +29,7 @@ int main(void)
 
 		fprintf(f, "\n\n\nNew Session - Writing on .log: Hello from PVM %s task tid=0x%x pid=%d\n\n\n", hostname, tid, getpid());
 		fprintf(f, "Hello from PVM %s task tid=0x%x pid=%d\n", hostname, tid, getpid());
-		fprintf(f, "Start counting 3 seconds and printing TaskID... \n");
+		fprintf(f, "Start counting 20 seconds and printing TaskID... \n");
 
 		do {
 	        current = time(NULL);
@@ -38,9 +38,9 @@ int main(void)
 	            return 1;
 	        }
 
-	    } while (difftime(current, start) < 3);
+	    } while (difftime(current, start) < 20);
 
-	    fprintf(f, "3 seconds have passed!\n\n\n");
+	    fprintf(f, "20 seconds have passed!\n\n\n");
 		fprintf(f, "Goodbye from PVM %s task tid=0x%x pid=%d time=%d\n", hostname, tid, getpid(), (int)current);
 		fprintf(f, "\n\n\n Task End!!! \n\n\n");
         fclose(f);

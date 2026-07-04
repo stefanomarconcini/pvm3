@@ -2544,7 +2544,6 @@ char **argv;
 	return( TCL_OK );
 }
 
-
 /* ARGSUSED */
 int
 get_hosts_menu_list( clientData, itp, argc, argv )
@@ -2554,14 +2553,13 @@ int argc;
 char **argv;
 {
 	HOST_EXT HE;
-
 	TRC_HOST H;
 
 	char *cmd_argv[MAX_HID];
 	char *tmparg[4];
 	char *merge[2];
 
-	char **list_argv;
+	char **list_argv = NULL;
 
 	char *label;
 	char *state;
@@ -2574,10 +2572,12 @@ char **argv;
 	char tmp[1024];
 
 	int i;
+	int nhosts_used;
+	int hosts_from_tcl = 0;
 
 	/* Host Commands */
 
-	for ( i=0 ; i < MAX_HID ; i++ )
+	for ( i = 0 ; i < MAX_HID ; i++ )
 	{
 		tmparg[0] = HOST_CMD_STRS[i];
 
@@ -2593,16 +2593,17 @@ char **argv;
 
 	cmds = Tcl_Merge( MAX_HID, cmd_argv );
 
+	for ( i = 0 ; i < MAX_HID ; i++ )
+		Tcl_Free( cmd_argv[i] );
+
 	/* Hosts */
 
 	if ( NHOSTS > 0 )
 	{
-		list_argv = (char **) malloc( (unsigned) NHOSTS
-			* sizeof(char *) );
+		list_argv = (char **) malloc( (unsigned) NHOSTS * sizeof(char *) );
 		trc_memcheck( list_argv, "Menu List Argv" );
 
 		H = HOST_LIST;
-
 		i = 0;
 
 		while ( H != NULL )
@@ -2613,7 +2614,6 @@ char **argv;
 
 				if ( H->in_pvm == TRC_IN_PVM )
 					state = trc_copy_str( "ON" );
-
 				else
 					state = trc_copy_str( "OFF" );
 
@@ -2646,11 +2646,20 @@ char **argv;
 			H = H->next;
 		}
 
-		hosts = Tcl_Merge( i, list_argv );
-	}
+		nhosts_used = i;
+		hosts = Tcl_Merge( nhosts_used, list_argv );
+		hosts_from_tcl = 1;
 
+		for ( i = 0 ; i < nhosts_used ; i++ )
+			Tcl_Free( list_argv[i] );
+
+		free( list_argv );
+	}
 	else
+	{
 		hosts = trc_copy_str( "" );
+		hosts_from_tcl = 0;
+	}
 
 	/* Return Combined List as Result */
 
@@ -2659,14 +2668,18 @@ char **argv;
 
 	result = Tcl_Merge( 2, merge );
 
-	Tcl_Free( cmds );
-	Tcl_Free( hosts );
-
 	Tcl_SetResult( itp, result, TCL_VOLATILE );
+
+	Tcl_Free( result );
+	Tcl_Free( cmds );
+
+	if ( hosts_from_tcl )
+		Tcl_Free( hosts );
+	else
+		free( hosts );
 
 	return( TCL_OK );
 }
-
 
 /* ARGSUSED */
 int
